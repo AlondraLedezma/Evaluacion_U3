@@ -28,7 +28,8 @@ CREATE TABLE paquetes (
 INSERT INTO usuarios (username, password_hash, nombre_completo) VALUES 
 ('Alondra', '123', 'Alondra Perez'),
 ('agente1', '12345', 'Juan Agente');
+('Alondra', '12345', 'Alondra Ledezma')
 
 INSERT INTO paquetes (direccion, latitud, longitud, agente_asignado_id) VALUES 
-('Av. Pie de la Cuesta No. 2501', 20.6123, -100.4123, 1),
-('Centro Historico, Plaza de Armas', 20.5923, -100.3923, 1);
+('Av. Pie de la Cuesta No. 2501', 20.6123, -100.4123, 3),
+('Centro Historico, Plaza de Armas', 20.5923, -100.3923, 3);

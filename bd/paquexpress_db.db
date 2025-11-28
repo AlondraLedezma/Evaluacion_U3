@@ -1,0 +1,34 @@
+DROP DATABASE IF EXISTS paquexpress_db;
+CREATE DATABASE paquexpress_db;
+USE paquexpress_db;
+
+-- Tabla Usuarios
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL, 
+    nombre_completo VARCHAR(100)
+);
+
+-- Tabla Paquetes
+CREATE TABLE paquetes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    direccion VARCHAR(255) NOT NULL,
+    latitud DOUBLE,
+    longitud DOUBLE,
+    estado ENUM('pendiente', 'entregado') DEFAULT 'pendiente',
+    foto_evidencia VARCHAR(255),
+    fecha_entrega DATETIME,
+    agente_asignado_id INT,
+    FOREIGN KEY (agente_asignado_id) REFERENCES usuarios(id)
+);
+
+-- DATOS DE PRUEBA (Aquí está Alondra)
+-- Usuario: Alondra, Contraseña: 123
+INSERT INTO usuarios (username, password_hash, nombre_completo) VALUES 
+('Alondra', '123', 'Alondra Perez'),
+('agente1', '12345', 'Juan Agente');
+
+INSERT INTO paquetes (direccion, latitud, longitud, agente_asignado_id) VALUES 
+('Av. Pie de la Cuesta No. 2501', 20.6123, -100.4123, 1),
+('Centro Historico, Plaza de Armas', 20.5923, -100.3923, 1);

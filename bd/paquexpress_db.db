@@ -1,35 +1,76 @@
-DROP DATABASE IF EXISTS paquexpress_db;
+-- Crear base de datos
 CREATE DATABASE paquexpress_db;
+
+-- Usar base de datos
 USE paquexpress_db;
 
--- Tabla Usuarios
+-----------------------------------------------------
+-- TABLA: usuarios
+-----------------------------------------------------
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL, 
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     nombre_completo VARCHAR(100)
 );
 
--- Tabla Paquetes
+-----------------------------------------------------
+-- TABLA: paquetes
+-----------------------------------------------------
 CREATE TABLE paquetes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     direccion VARCHAR(255) NOT NULL,
-    latitud DOUBLE,
-    longitud DOUBLE,
     estado ENUM('pendiente', 'entregado') DEFAULT 'pendiente',
-    foto_evidencia VARCHAR(255),
-    fecha_entrega DATETIME,
     agente_asignado_id INT,
+    latitud DOUBLE NULL,
+    longitud DOUBLE NULL,
+    foto_evidencia VARCHAR(255) NULL,
+    fecha_entrega DATETIME NULL,
     FOREIGN KEY (agente_asignado_id) REFERENCES usuarios(id)
 );
 
--- DATOS DE PRUEBA (Aquí está Alondra)
--- Usuario: Alondra, Contraseña: 123
-INSERT INTO usuarios (username, password_hash, nombre_completo) VALUES 
-('Alondra', '123', 'Alondra Perez'),
-('agente1', '12345', 'Juan Agente');
-('Alondra', '12345', 'Alondra Ledezma')
+-----------------------------------------------------
+-- INSERTS DE USUARIOS
+-----------------------------------------------------
 
-INSERT INTO paquetes (direccion, latitud, longitud, agente_asignado_id) VALUES 
-('Av. Pie de la Cuesta No. 2501', 20.6123, -100.4123, 3),
-('Centro Historico, Plaza de Armas', 20.5923, -100.3923, 3);
+-- Usuario agente1 (hash bcrypt ejemplo de '12345')
+INSERT INTO usuarios (username, password_hash, nombre_completo)
+VALUES ('agente1', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaW/m.tJ.uO3S/A.QjTc8r.v.y.lHKy', 'Juan Pérez');
+
+-- Usuario profe
+INSERT INTO usuarios (username, password_hash, nombre_completo)
+VALUES ('profe', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaW/m.tJ.uO3S/A.QjTc8r.v.y.lHKy', 'Usuario Maestro');
+
+-- Usuario alondra (hash Argon2 real)
+INSERT INTO usuarios (username, password_hash, nombre_completo)
+VALUES ('alondra', '$argon2id$v=19$m=65536,t=3,p=4$0hoDgNA6p9SaU+rd+x9jDA$UOp2X0nP8WgM2gvAvslaSpR/uY4VioVZgXbsiagONms', 'alondra ledezma');
+
+-----------------------------------------------------
+-- INSERTS DE PAQUETES
+-----------------------------------------------------
+
+-- Paquetes asignados al agente1
+INSERT INTO paquetes (direccion, agente_asignado_id)
+VALUES ('Av. Pie de la Cuesta 2501', 1);
+
+INSERT INTO paquetes (direccion, agente_asignado_id)
+VALUES ('Centro Histórico, Qro', 1);
+
+-- Paquete asignado a alondra (id 3)
+INSERT INTO paquetes (direccion, agente_asignado_id, estado)
+VALUES ('Av. Universidad 123, Centro', 3, 'pendiente');
+
+-- Ejemplo registrado como entregado después (en tu ejecución final)
+-- id = 4 ejemplo de entrega generada por la app:
+-- dirección: Av. Universidad 123, Centro
+-- lat/lng, foto y fecha fueron actualizados por backend
+
+-- Paquetes adicionales para alondra
+INSERT INTO paquetes (direccion, agente_asignado_id, estado)
+VALUES ('Plaza Boulevares, Querétaro', 3, 'pendiente');
+
+INSERT INTO paquetes (direccion, agente_asignado_id, estado)
+VALUES ('Alameda Hidalgo, Centro', 3, 'pendiente');
+
+INSERT INTO paquetes (direccion, agente_asignado_id, estado)
+VALUES ('Juriquilla Santa Fe #405', 3, 'pendiente');
